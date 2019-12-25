@@ -410,6 +410,7 @@ class Lexer
         if (defined('T_COMPILER_HALT_OFFSET')) {
             $tokenMap[\T_COMPILER_HALT_OFFSET] = Tokens::T_STRING;
         }
+        $tokenMap[T_STRUCT]=T_STRUCT;
 
         return $tokenMap;
     }
