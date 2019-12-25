@@ -112,3 +112,4 @@
 %token T_DIR
 %token T_NS_SEPARATOR
 %token T_ELLIPSIS
+%token T_STRUCT
