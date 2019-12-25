@@ -27,7 +27,7 @@ reserved_non_modifiers:
     | T_FINALLY | T_THROW | T_USE | T_INSTEADOF | T_GLOBAL | T_VAR | T_UNSET | T_ISSET | T_EMPTY | T_CONTINUE | T_GOTO
     | T_FUNCTION | T_CONST | T_RETURN | T_PRINT | T_YIELD | T_LIST | T_SWITCH | T_ENDSWITCH | T_CASE | T_DEFAULT
     | T_BREAK | T_ARRAY | T_CALLABLE | T_EXTENDS | T_IMPLEMENTS | T_NAMESPACE | T_TRAIT | T_INTERFACE | T_CLASS
-    | T_CLASS_C | T_TRAIT_C | T_FUNC_C | T_METHOD_C | T_LINE | T_FILE | T_DIR | T_NS_C | T_HALT_COMPILER | T_FN
+    | T_CLASS_C | T_TRAIT_C | T_FUNC_C | T_METHOD_C | T_LINE | T_FILE | T_DIR | T_NS_C | T_HALT_COMPILER | T_FN | T_STRUCT
 ;
 
 semi_reserved:
@@ -79,6 +79,7 @@ top_statement:
       statement                                             { $$ = $1; }
     | function_declaration_statement                        { $$ = $1; }
     | class_declaration_statement                           { $$ = $1; }
+    | struct_declaration_statement                          { $$ = $1; }
     | T_HALT_COMPILER
           { $$ = Stmt\HaltCompiler[$this->lexer->handleHaltCompiler()]; }
     | T_NAMESPACE namespace_name semi
@@ -204,6 +205,7 @@ inner_statement:
       statement                                             { $$ = $1; }
     | function_declaration_statement                        { $$ = $1; }
     | class_declaration_statement                           { $$ = $1; }
+    | struct_declaration_statement                          { $$ = $1; }
     | T_HALT_COMPILER
           { throw new Error('__HALT_COMPILER() can only be used from the outermost scope', attributes()); }
 ;
@@ -316,6 +318,11 @@ class_declaration_statement:
             $this->checkInterface($$, #2); }
     | T_TRAIT identifier '{' class_statement_list '}'
           { $$ = Stmt\Trait_[$2, ['stmts' => $4]]; }
+;
+
+struct_declaration_statement:
+      T_STRUCT identifier '(' parameter_list ')'
+          { $$ = Stmt\Struct_[$2, $4]; }
 ;
 
 class_entry_type:
